@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>算法 on chagelo</title>
-    <link>/categories/%E7%AE%97%E6%B3%95/</link>
+    <link>https://chagelo.github.io/hugo/categories/%E7%AE%97%E6%B3%95/</link>
     <description>Recent content in 算法 on chagelo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2008–2019</copyright>
     <lastBuildDate>Wed, 25 Sep 2019 17:24:45 +0000</lastBuildDate>
     
-	<atom:link href="/categories/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://chagelo.github.io/hugo/categories/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>[SPOJ NO GCD]</title>
-      <link>/post/spoj-no-gcd/</link>
+      <link>https://chagelo.github.io/hugo/post/spoj-no-gcd/</link>
       <pubDate>Wed, 25 Sep 2019 17:24:45 +0000</pubDate>
       
-      <guid>/post/spoj-no-gcd/</guid>
+      <guid>https://chagelo.github.io/hugo/post/spoj-no-gcd/</guid>
       <description>&lt;h3 id=&#34;链接&#34;&gt;链接&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&#34;https://vjudge.net/problem/SPOJ-NGCD&#34;&gt;$\text{SPOJ - NO GCD}$&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;题意&#34;&gt;题意&lt;/h3&gt;
