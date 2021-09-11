@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>index on chagelo</title>
-    <link>https://github.com/chagelo/hugo/tags/index/</link>
+    <link>/tags/index/</link>
     <description>Recent content in index on chagelo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2008–2019</copyright>
     
-	<atom:link href="https://github.com/chagelo/hugo/tags/index/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/index/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Posts</title>
-      <link>https://github.com/chagelo/hugo/post/</link>
+      <link>/post/</link>
       <pubDate>Fri, 10 Sep 2021 21:25:17 +0800</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/post/</guid>
+      <guid>/post/</guid>
       <description></description>
     </item>
     

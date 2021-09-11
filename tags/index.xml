@@ -2,94 +2,94 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on chagelo</title>
-    <link>https://github.com/chagelo/hugo/tags/</link>
+    <link>/tags/</link>
     <description>Recent content in Tags on chagelo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2008–2019</copyright>
     <lastBuildDate>Wed, 25 Sep 2019 17:24:45 +0000</lastBuildDate>
     
-	<atom:link href="https://github.com/chagelo/hugo/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>思维</title>
-      <link>https://github.com/chagelo/hugo/tags/%E6%80%9D%E7%BB%B4/</link>
+      <link>/tags/%E6%80%9D%E7%BB%B4/</link>
       <pubDate>Wed, 25 Sep 2019 17:24:45 +0000</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/tags/%E6%80%9D%E7%BB%B4/</guid>
+      <guid>/tags/%E6%80%9D%E7%BB%B4/</guid>
       <description></description>
     </item>
     
     <item>
       <title>数学</title>
-      <link>https://github.com/chagelo/hugo/tags/%E6%95%B0%E5%AD%A6/</link>
+      <link>/tags/%E6%95%B0%E5%AD%A6/</link>
       <pubDate>Wed, 25 Sep 2019 17:24:45 +0000</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/tags/%E6%95%B0%E5%AD%A6/</guid>
+      <guid>/tags/%E6%95%B0%E5%AD%A6/</guid>
       <description></description>
     </item>
     
     <item>
       <title>css</title>
-      <link>https://github.com/chagelo/hugo/tags/css/</link>
+      <link>/tags/css/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/tags/css/</guid>
+      <guid>/tags/css/</guid>
       <description></description>
     </item>
     
     <item>
       <title>html</title>
-      <link>https://github.com/chagelo/hugo/tags/html/</link>
+      <link>/tags/html/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/tags/html/</guid>
+      <guid>/tags/html/</guid>
       <description></description>
     </item>
     
     <item>
       <title>markdown</title>
-      <link>https://github.com/chagelo/hugo/tags/markdown/</link>
+      <link>/tags/markdown/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/tags/markdown/</guid>
+      <guid>/tags/markdown/</guid>
       <description></description>
     </item>
     
     <item>
       <title>themes</title>
-      <link>https://github.com/chagelo/hugo/tags/themes/</link>
+      <link>/tags/themes/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/tags/themes/</guid>
+      <guid>/tags/themes/</guid>
       <description></description>
     </item>
     
     <item>
       <title>text</title>
-      <link>https://github.com/chagelo/hugo/tags/text/</link>
+      <link>/tags/text/</link>
       <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/tags/text/</guid>
+      <guid>/tags/text/</guid>
       <description></description>
     </item>
     
     <item>
       <title>emoji</title>
-      <link>https://github.com/chagelo/hugo/tags/emoji/</link>
+      <link>/tags/emoji/</link>
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/tags/emoji/</guid>
+      <guid>/tags/emoji/</guid>
       <description></description>
     </item>
     
     <item>
       <title>index</title>
-      <link>https://github.com/chagelo/hugo/tags/index/</link>
+      <link>/tags/index/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://github.com/chagelo/hugo/tags/index/</guid>
+      <guid>/tags/index/</guid>
       <description></description>
     </item>
     
