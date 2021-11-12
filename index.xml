@@ -20,7 +20,7 @@
       <guid>https://chagelo.github.io/hugo/post/program-in-machine-level/</guid>
       <description>&lt;h2 id=&#34;一些语法&#34;&gt;一些语法&lt;/h2&gt;
 &lt;p&gt;x86-64 16个寄存器&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://chagelo.github.io/hugo/image/x86_register.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/x86_register.png&#34;&gt;
 &lt;!-- more --&gt;
 &lt;p&gt;注意&lt;code&gt;rax&lt;/code&gt;可以做函数返回值。&lt;/p&gt;
 &lt;p&gt;AT&amp;amp;T格式汇编中，立即数表示为&lt;code&gt;$&lt;/code&gt;跟一个C标准的整数，&lt;code&gt;$-577&lt;/code&gt;或&lt;code&gt;$0x1f&lt;/code&gt;&lt;/p&gt;
@@ -30,11 +30,11 @@
 &lt;p&gt;&lt;code&gt;movl&lt;/code&gt;以寄存器作为目的时，会把寄存器的高位4字节置为0。x86-64的惯例，任何为寄存器生成32位值的指令都会把该寄存器的高位部分置为0。&lt;/p&gt;
 &lt;p&gt;mov指令的最后一个字符需要和寄存器相互匹配。&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;rbp&lt;/code&gt;、&lt;code&gt;ebp&lt;/code&gt;、&lt;code&gt;bp&lt;/code&gt;、&lt;code&gt;bpl&lt;/code&gt;不能作为目的地址寄存器。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://chagelo.github.io/hugo/image/mov_instruction.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/mov_instruction.png&#34;&gt;
 &lt;h2 id=&#34;leaq&#34;&gt;leaq&lt;/h2&gt;
 &lt;p&gt;加载有效地址&lt;/p&gt;
 &lt;h2 id=&#34;常见算数逻辑操作&#34;&gt;常见算数逻辑操作&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&#34;https://chagelo.github.io/hugo/image/instruction.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/instruction.png&#34; alt=&#34;instruction&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;移位&#34;&gt;移位&lt;/h2&gt;
 &lt;p&gt;在x86-64中，移位量由&lt;code&gt;%cl&lt;/code&gt;寄存器的低位决定，高位会忽略，比如对于&lt;code&gt;salq&lt;/code&gt;移位量最大是63，&lt;code&gt;%cl&lt;/code&gt;低6位决定。&lt;/p&gt;
 </description>

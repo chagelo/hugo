@@ -178,7 +178,7 @@ onload='renderMathInElement(document.body);'></script>
 	<section class="mx-auto content">
 		<div class="c-rich-text"><h2 id="一些语法">一些语法</h2>
 <p>x86-64 16个寄存器</p>
-<p><img src="/image/x86_register.png" alt=""></p>
+<img src="/hugo/image/x86_register.png">
 <!-- more -->
 <p>注意<code>rax</code>可以做函数返回值。</p>
 <p>AT&amp;T格式汇编中，立即数表示为<code>$</code>跟一个C标准的整数，<code>$-577</code>或<code>$0x1f</code></p>
@@ -188,11 +188,11 @@ onload='renderMathInElement(document.body);'></script>
 <p><code>movl</code>以寄存器作为目的时，会把寄存器的高位4字节置为0。x86-64的惯例，任何为寄存器生成32位值的指令都会把该寄存器的高位部分置为0。</p>
 <p>mov指令的最后一个字符需要和寄存器相互匹配。</p>
 <p><code>rbp</code>、<code>ebp</code>、<code>bp</code>、<code>bpl</code>不能作为目的地址寄存器。</p>
-<p><img src="/image/mov_instruction.png" alt=""></p>
+<img src="/hugo/image/mov_instruction.png">
 <h2 id="leaq">leaq</h2>
 <p>加载有效地址</p>
 <h2 id="常见算数逻辑操作">常见算数逻辑操作</h2>
-<p><img src="/image/instruction.png" alt=""></p>
+<p><img src="/hugo/image/instruction.png" alt="instruction"></p>
 <h2 id="移位">移位</h2>
 <p>在x86-64中，移位量由<code>%cl</code>寄存器的低位决定，高位会忽略，比如对于<code>salq</code>移位量最大是63，<code>%cl</code>低6位决定。</p>
 </div>
