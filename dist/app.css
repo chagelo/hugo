@@ -838,8 +838,8 @@ details.toc hr:after {
 }
 
 .mx-auto {
-    margin-left: auto;
-    margin-right: auto
+    margin-left: 0rem;
+    margin-right: 0rem
 }
 
 .max-h-16 {
@@ -1127,7 +1127,7 @@ details.toc hr:after {
     }
 }
 
-@media (min-width:300px) {
+@media (min-width:768px) {
     .md\:flex-row {
         flex-direction: row
     }
