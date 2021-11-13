@@ -183,18 +183,114 @@ onload='renderMathInElement(document.body);'></script>
 <p>注意<code>rax</code>可以做函数返回值。</p>
 <p>AT&amp;T格式汇编中，立即数表示为<code>$</code>跟一个C标准的整数，<code>$-577</code>或<code>$0x1f</code></p>
 <p>$Imm(r_b, r_i, s)$表示的地址为$Imm+R[r_b]+R[r_i]\cdot s$</p>
-<h3 id="mov">mov</h3>
+<h3 id="指令">指令</h3>
 <p>x86-64 规定<code>mov</code>的两个操作数不能都指向内存，内存里面数据转移至少要两个指令。</p>
 <p><code>movl</code>以寄存器作为目的时，会把寄存器的高位4字节置为0。x86-64的惯例，任何为寄存器生成32位值的指令都会把该寄存器的高位部分置为0。</p>
 <p>mov指令的最后一个字符需要和寄存器相互匹配。</p>
 <p><code>rbp</code>、<code>ebp</code>、<code>bp</code>、<code>bpl</code>不能作为目的地址寄存器。</p>
 <img src="/hugo/image/mov_instruction.png">
-<h2 id="leaq">leaq</h2>
-<p>加载有效地址</p>
-<h2 id="常见算数逻辑操作">常见算数逻辑操作</h2>
+<p>leaq</p>
+<p>加载有效地址，目的操作数必须是寄存器，可将将它看成<code>mov</code></p>
 <p><img src="/hugo/image/instruction.png" alt="instruction"></p>
-<h2 id="移位">移位</h2>
+<p>128位乘除法</p>
+<img src ="/hugo/image/mul_div.png">
+<p><code>imul</code>有单操作数和双操作数的指令。</p>
+<p><code>clto</code>, <code>cqto</code>都是对<code>%rax</code>进行操作，进行符号扩展。</p>
+<p>移位</p>
 <p>在x86-64中，移位量由<code>%cl</code>寄存器的低位决定，高位会忽略，比如对于<code>salq</code>移位量最大是63，<code>%cl</code>低6位决定。</p>
+<p>条件码</p>
+<p>cf: 最高位进位，检查无符号溢出
+zf: 0标志
+sf: 符号位，是不是负数
+of: 是否溢出，正溢出或负溢出</p>
+<p>test 和 cmp</p>
+<p>test 使用两个操作数的与运算结果来测试，cmp 则是减法。注意它们的结果都是去设置条件码。</p>
+<p>注意<code>cmpq %rsi, %rdi</code>实际上比较的是<code>%rdi</code>和<code>%rsi</code>。</p>
+<p>set指令</p>
+<img src="/hugo/image/set_instruction.png">
+<p><code>setg</code>和<code>setnle</code>实际上是相同指令。</p>
+<p>对于<code>setl</code>表示当小于时设置指令（根据上一步结果的条件码设置）。</p>
+<ol>
+<li>若of为0，没有溢出；a - b &lt; 0, a &lt; b，有sf = 1，a - b &gt;=0, a &gt;= b，有sf = 0，sf ^ of = 0；</li>
+<li>若of为1，a - b &gt; 0（负溢出）, a &lt; b，sf = 0, a - b &lt; 0（正溢出）, a &gt; b, sf = 1；</li>
+</ol>
+<p>条件数据传送：计算一个条件操作中的两种结果，根据条件从其中取一个；和条件转移相比，这更像一种离线操作，后者更像在线操作。</p>
+<h3 id="数据传送">数据传送</h3>
+<p>若一个P调用Q，n个参数，n &gt; 6，那么P的代码分配的栈帧必须能容纳7到n号参数的存储空间，如下图所示意；</p>
+<img src="/hugo/image/func_stack.png">
+<p>调用时先把1-6号参数复制到对应寄存器，之后其他参数放到栈中，7号在栈顶；调用时返回地址也被压入栈</p>
+<p>但是有的时候数据必须放在内存中，比如：</p>
+<ol>
+<li>寄存器不足以存放所有本地数据</li>
+<li>使用了<code>&amp;</code>，就需要给它一个地址</li>
+<li>数据，结构体</li>
+</ol>
+<p>下面的一个例子很好。</p>
+<p>&lt;img src=&quot;/hugo/image/call_func.png&gt;</p>
+<p>下面是一个更复杂的例子</p>
+<div class="highlight"><pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#00a8c8">long</span> <span style="color:#75af00">call_proc</span><span style="color:#111">()</span> <span style="color:#111">{</span>
+    <span style="color:#75715e">// long is regard as 8 bytes;
+</span><span style="color:#75715e"></span>    <span style="color:#00a8c8">long</span> <span style="color:#111">x1</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#111">;</span> <span style="color:#00a8c8">int</span> <span style="color:#111">x2</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#111">;</span>
+    <span style="color:#00a8c8">short</span> <span style="color:#111">x3</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span><span style="color:#111">;</span> <span style="color:#00a8c8">char</span> <span style="color:#111">x4</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#111">;</span>
+    <span style="color:#111">proc</span><span style="color:#111">(</span><span style="color:#111">x1</span><span style="color:#111">,</span> <span style="color:#f92672">&amp;</span><span style="color:#111">x1</span><span style="color:#111">,</span> <span style="color:#111">x2</span><span style="color:#111">,</span> <span style="color:#f92672">&amp;</span><span style="color:#111">x2</span><span style="color:#111">,</span> <span style="color:#111">x3</span><span style="color:#111">,</span> <span style="color:#f92672">&amp;</span><span style="color:#111">x3</span><span style="color:#111">,</span> <span style="color:#111">x4</span><span style="color:#111">,</span> <span style="color:#f92672">&amp;</span><span style="color:#111">x4</span><span style="color:#111">);</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">(</span><span style="color:#111">x1</span> <span style="color:#f92672">+</span> <span style="color:#111">x1</span><span style="color:#111">)</span> <span style="color:#f92672">*</span> <span style="color:#111">(</span><span style="color:#111">x3</span> <span style="color:#f92672">-</span> <span style="color:#111">x4</span><span style="color:#111">);</span>
+<span style="color:#111">}</span>
+</code></pre></div><pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">    call_proc:
+        ; set up arguments to proc
+        subq $32, %rsp  ;allocate 32byte stack frame
+        movq $1, 24(%rsp)   ;store 1 in &amp;x1
+        movl $2, 20(%rsp)   ;store 2 in &amp;x2
+        movw $3, 18(%rsp)   ;store 3 in &amp;x3
+        movb $4, 17(%rsp)   ;store 4 in &amp;x4
+        leaq 17(%rsp), %rax ;create &amp;x4
+        movq %rax, 8(%rsp)  ;store &amp;x4 as argument 8
+        movl $4, (%rsp)     ;store 4 as argument 7
+        leaq 18(%rsp), %r9  ;pass &amp;x3 as argumen 6
+        movl $3, %r8d       ;pass 3 as argument 5
+        leaq 20(%rsp), %rcx ;pass &amp;x2 as argument 4
+        movl $2, %edx       ;pass 2 as argument 3
+        leaq 24(%rsp), %rsi ;pass &amp;x1 as argument 2
+        movl $1, %edi       ;pass a as argument 1
+        ; call proc
+        call proc
+        ; retrieve changes to memory
+        movslq 20(%rsp), %rdx   ;get x2 and convert to long
+        addq 24(%rsp), %rdx     ;compute x1 + x2
+        movswl 18(%rsp), %eax   ;get x3 and convert to int
+        movsbl 17(%rsp), %ecx   ;get x4 and convert to int
+        subl %ecx, %eax         ;compute x3 - x4
+        cltq                    ;convert to long
+        imul %rdx, %rax         ;compute (x1 + x2) * (x3 - x4)
+        addq $32, $rsp          ;deallocate stack frame
+        ret                     ;return
+</code></pre><p>由于x1, x2, x3, x4都用到了地址，所以都分配了内存空间，对于函数调用，需要将前6个参数送到寄存器，除此6个参数外的两个参数需要在内存中分配空间，因此x4的地址也要存储，而不能想直接使用x4的地址。栈底的一部分参数（比如4个变量）我感觉是属于调用函数的栈帧，而后面靠近栈顶的是属于被调用函数proc的栈帧。</p>
+<p><strong>被调用者保存寄存器</strong></p>
+<img src ="/hugo/image/call_proc_stack.png">
+<p>寄存器<code>%rbx</code>、<code>%rbp</code>和<code>%r12~%r15</code>被看作是被调用者寄存器，当P调用Q时，Q必须保存这些寄存器的值，而Q要么一直不动这些寄存器，要么把这些值入栈。</p>
+<p>如果一个寄存器被标识为“Caller Save”， 那么在进行子函数调用前，就需要由调用者提前保存好这些寄存器的值，保存方法通常是把寄存器的值压入堆栈中，调用者保存完成后，在被调用者（子函数）中就可以随意覆盖这些寄存器的值了。如果一个寄存被标识为“Callee Save”，那么在函数调用时，调用者就不必保存这些寄存器的值而直接进行子函数调用，进入子函数后，子函数在覆盖这些寄存器之前，需要先保存这些寄存器的值，即这些寄存器的值是由被调用者来保存和恢复的。</p>
+<p><code>%rbp</code>通常指示当前栈帧的起始位置</p>
+<div class="highlight"><pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#00a8c8">long</span> <span style="color:#75af00">P</span><span style="color:#111">(</span><span style="color:#00a8c8">long</span> <span style="color:#111">x</span><span style="color:#111">,</span> <span style="color:#00a8c8">long</span> <span style="color:#111">y</span><span style="color:#111">)</span> <span style="color:#111">{</span>
+    <span style="color:#00a8c8">long</span> <span style="color:#111">u</span> <span style="color:#f92672">=</span> <span style="color:#111">P</span><span style="color:#111">(</span><span style="color:#111">x</span><span style="color:#111">);</span>
+    <span style="color:#00a8c8">long</span> <span style="color:#111">v</span> <span style="color:#f92672">=</span> <span style="color:#111">Q</span><span style="color:#111">(</span><span style="color:#111">y</span><span style="color:#111">);</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">u</span> <span style="color:#f92672">+</span> <span style="color:#111">v</span><span style="color:#111">;</span>
+<span style="color:#111">}</span> 
+</code></pre></div><pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">    ; x in %rdi, y in %rsi
+    P:
+        pushq %rbp  ; save %rbp
+        pushq %rbx  ; save %rbx
+        subq $8, %rsp   ; align stack frame
+        movq %rdi, %rbp ; save x
+        movq %rsi, %rdi ; move y to first argument
+        call Q          ; call Q(y)
+        movq %rax, %rbx ; save u = Q(y)
+        movq %rbp, %rdi ; move x to first argument
+        call Q          ; call Q(x)
+        addq %rdx, %rax ; u + v
+        addq $8, %rsp   ; deallocate last part of stack
+        popq %rbx       ; retore %rbx
+        popq %rbp       ; resore %rbp
+        ret     
+</code></pre><p>前两条<code>push</code>保存之前被调用者寄存器到栈中（此时P是被调用者），</p>
 </div>
 	</section>
 
@@ -382,7 +478,7 @@ onload='renderMathInElement(document.body);'></script>
 	<div class="text-sm text-gray-500 leading-tight a-gray">
 		Copyright © 2008–2019
 		<br />
-		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 332 words in this page.
+		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 1757 words in this page.
 	</div>
 </div>
 

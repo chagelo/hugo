@@ -25,18 +25,114 @@
 &lt;p&gt;注意&lt;code&gt;rax&lt;/code&gt;可以做函数返回值。&lt;/p&gt;
 &lt;p&gt;AT&amp;amp;T格式汇编中，立即数表示为&lt;code&gt;$&lt;/code&gt;跟一个C标准的整数，&lt;code&gt;$-577&lt;/code&gt;或&lt;code&gt;$0x1f&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;$Imm(r_b, r_i, s)$表示的地址为$Imm+R[r_b]+R[r_i]\cdot s$&lt;/p&gt;
-&lt;h3 id=&#34;mov&#34;&gt;mov&lt;/h3&gt;
+&lt;h3 id=&#34;指令&#34;&gt;指令&lt;/h3&gt;
 &lt;p&gt;x86-64 规定&lt;code&gt;mov&lt;/code&gt;的两个操作数不能都指向内存，内存里面数据转移至少要两个指令。&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;movl&lt;/code&gt;以寄存器作为目的时，会把寄存器的高位4字节置为0。x86-64的惯例，任何为寄存器生成32位值的指令都会把该寄存器的高位部分置为0。&lt;/p&gt;
 &lt;p&gt;mov指令的最后一个字符需要和寄存器相互匹配。&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;rbp&lt;/code&gt;、&lt;code&gt;ebp&lt;/code&gt;、&lt;code&gt;bp&lt;/code&gt;、&lt;code&gt;bpl&lt;/code&gt;不能作为目的地址寄存器。&lt;/p&gt;
 &lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/mov_instruction.png&#34;&gt;
-&lt;h2 id=&#34;leaq&#34;&gt;leaq&lt;/h2&gt;
-&lt;p&gt;加载有效地址&lt;/p&gt;
-&lt;h2 id=&#34;常见算数逻辑操作&#34;&gt;常见算数逻辑操作&lt;/h2&gt;
+&lt;p&gt;leaq&lt;/p&gt;
+&lt;p&gt;加载有效地址，目的操作数必须是寄存器，可将将它看成&lt;code&gt;mov&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/instruction.png&#34; alt=&#34;instruction&#34;&gt;&lt;/p&gt;
-&lt;h2 id=&#34;移位&#34;&gt;移位&lt;/h2&gt;
+&lt;p&gt;128位乘除法&lt;/p&gt;
+&lt;img src =&#34;/hugo/image/mul_div.png&#34;&gt;
+&lt;p&gt;&lt;code&gt;imul&lt;/code&gt;有单操作数和双操作数的指令。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;clto&lt;/code&gt;, &lt;code&gt;cqto&lt;/code&gt;都是对&lt;code&gt;%rax&lt;/code&gt;进行操作，进行符号扩展。&lt;/p&gt;
+&lt;p&gt;移位&lt;/p&gt;
 &lt;p&gt;在x86-64中，移位量由&lt;code&gt;%cl&lt;/code&gt;寄存器的低位决定，高位会忽略，比如对于&lt;code&gt;salq&lt;/code&gt;移位量最大是63，&lt;code&gt;%cl&lt;/code&gt;低6位决定。&lt;/p&gt;
+&lt;p&gt;条件码&lt;/p&gt;
+&lt;p&gt;cf: 最高位进位，检查无符号溢出
+zf: 0标志
+sf: 符号位，是不是负数
+of: 是否溢出，正溢出或负溢出&lt;/p&gt;
+&lt;p&gt;test 和 cmp&lt;/p&gt;
+&lt;p&gt;test 使用两个操作数的与运算结果来测试，cmp 则是减法。注意它们的结果都是去设置条件码。&lt;/p&gt;
+&lt;p&gt;注意&lt;code&gt;cmpq %rsi, %rdi&lt;/code&gt;实际上比较的是&lt;code&gt;%rdi&lt;/code&gt;和&lt;code&gt;%rsi&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;set指令&lt;/p&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/set_instruction.png&#34;&gt;
+&lt;p&gt;&lt;code&gt;setg&lt;/code&gt;和&lt;code&gt;setnle&lt;/code&gt;实际上是相同指令。&lt;/p&gt;
+&lt;p&gt;对于&lt;code&gt;setl&lt;/code&gt;表示当小于时设置指令（根据上一步结果的条件码设置）。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;若of为0，没有溢出；a - b &amp;lt; 0, a &amp;lt; b，有sf = 1，a - b &amp;gt;=0, a &amp;gt;= b，有sf = 0，sf ^ of = 0；&lt;/li&gt;
+&lt;li&gt;若of为1，a - b &amp;gt; 0（负溢出）, a &amp;lt; b，sf = 0, a - b &amp;lt; 0（正溢出）, a &amp;gt; b, sf = 1；&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;条件数据传送：计算一个条件操作中的两种结果，根据条件从其中取一个；和条件转移相比，这更像一种离线操作，后者更像在线操作。&lt;/p&gt;
+&lt;h3 id=&#34;数据传送&#34;&gt;数据传送&lt;/h3&gt;
+&lt;p&gt;若一个P调用Q，n个参数，n &amp;gt; 6，那么P的代码分配的栈帧必须能容纳7到n号参数的存储空间，如下图所示意；&lt;/p&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/func_stack.png&#34;&gt;
+&lt;p&gt;调用时先把1-6号参数复制到对应寄存器，之后其他参数放到栈中，7号在栈顶；调用时返回地址也被压入栈&lt;/p&gt;
+&lt;p&gt;但是有的时候数据必须放在内存中，比如：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;寄存器不足以存放所有本地数据&lt;/li&gt;
+&lt;li&gt;使用了&lt;code&gt;&amp;amp;&lt;/code&gt;，就需要给它一个地址&lt;/li&gt;
+&lt;li&gt;数据，结构体&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;下面的一个例子很好。&lt;/p&gt;
+&lt;p&gt;&amp;lt;img src=&amp;quot;/hugo/image/call_func.png&amp;gt;&lt;/p&gt;
+&lt;p&gt;下面是一个更复杂的例子&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#00a8c8&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#75af00&#34;&gt;call_proc&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#75715e&#34;&gt;// long is regard as 8 bytes;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#00a8c8&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#00a8c8&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#00a8c8&#34;&gt;short&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#00a8c8&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x4&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#111&#34;&gt;proc&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;x1&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;x1&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x2&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;x2&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x3&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;x3&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x4&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;x4&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#00a8c8&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;x1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x1&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;x3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x4&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#111&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-x86asm&#34; data-lang=&#34;x86asm&#34;&gt;    call_proc:
+        ; set up arguments to proc
+        subq $32, %rsp  ;allocate 32byte stack frame
+        movq $1, 24(%rsp)   ;store 1 in &amp;amp;x1
+        movl $2, 20(%rsp)   ;store 2 in &amp;amp;x2
+        movw $3, 18(%rsp)   ;store 3 in &amp;amp;x3
+        movb $4, 17(%rsp)   ;store 4 in &amp;amp;x4
+        leaq 17(%rsp), %rax ;create &amp;amp;x4
+        movq %rax, 8(%rsp)  ;store &amp;amp;x4 as argument 8
+        movl $4, (%rsp)     ;store 4 as argument 7
+        leaq 18(%rsp), %r9  ;pass &amp;amp;x3 as argumen 6
+        movl $3, %r8d       ;pass 3 as argument 5
+        leaq 20(%rsp), %rcx ;pass &amp;amp;x2 as argument 4
+        movl $2, %edx       ;pass 2 as argument 3
+        leaq 24(%rsp), %rsi ;pass &amp;amp;x1 as argument 2
+        movl $1, %edi       ;pass a as argument 1
+        ; call proc
+        call proc
+        ; retrieve changes to memory
+        movslq 20(%rsp), %rdx   ;get x2 and convert to long
+        addq 24(%rsp), %rdx     ;compute x1 + x2
+        movswl 18(%rsp), %eax   ;get x3 and convert to int
+        movsbl 17(%rsp), %ecx   ;get x4 and convert to int
+        subl %ecx, %eax         ;compute x3 - x4
+        cltq                    ;convert to long
+        imul %rdx, %rax         ;compute (x1 + x2) * (x3 - x4)
+        addq $32, $rsp          ;deallocate stack frame
+        ret                     ;return
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;由于x1, x2, x3, x4都用到了地址，所以都分配了内存空间，对于函数调用，需要将前6个参数送到寄存器，除此6个参数外的两个参数需要在内存中分配空间，因此x4的地址也要存储，而不能想直接使用x4的地址。栈底的一部分参数（比如4个变量）我感觉是属于调用函数的栈帧，而后面靠近栈顶的是属于被调用函数proc的栈帧。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;被调用者保存寄存器&lt;/strong&gt;&lt;/p&gt;
+&lt;img src =&#34;/hugo/image/call_proc_stack.png&#34;&gt;
+&lt;p&gt;寄存器&lt;code&gt;%rbx&lt;/code&gt;、&lt;code&gt;%rbp&lt;/code&gt;和&lt;code&gt;%r12~%r15&lt;/code&gt;被看作是被调用者寄存器，当P调用Q时，Q必须保存这些寄存器的值，而Q要么一直不动这些寄存器，要么把这些值入栈。&lt;/p&gt;
+&lt;p&gt;如果一个寄存器被标识为“Caller Save”， 那么在进行子函数调用前，就需要由调用者提前保存好这些寄存器的值，保存方法通常是把寄存器的值压入堆栈中，调用者保存完成后，在被调用者（子函数）中就可以随意覆盖这些寄存器的值了。如果一个寄存被标识为“Callee Save”，那么在函数调用时，调用者就不必保存这些寄存器的值而直接进行子函数调用，进入子函数后，子函数在覆盖这些寄存器之前，需要先保存这些寄存器的值，即这些寄存器的值是由被调用者来保存和恢复的。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;%rbp&lt;/code&gt;通常指示当前栈帧的起始位置&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#00a8c8&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#75af00&#34;&gt;P&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#00a8c8&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;x&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#00a8c8&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;y&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#00a8c8&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;u&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;P&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;x&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#00a8c8&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;v&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;Q&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;y&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#00a8c8&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;u&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#111&#34;&gt;v&lt;/span&gt;&lt;span style=&#34;color:#111&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#111&#34;&gt;}&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-x86asm&#34; data-lang=&#34;x86asm&#34;&gt;    ; x in %rdi, y in %rsi
+    P:
+        pushq %rbp  ; save %rbp
+        pushq %rbx  ; save %rbx
+        subq $8, %rsp   ; align stack frame
+        movq %rdi, %rbp ; save x
+        movq %rsi, %rdi ; move y to first argument
+        call Q          ; call Q(y)
+        movq %rax, %rbx ; save u = Q(y)
+        movq %rbp, %rdi ; move x to first argument
+        call Q          ; call Q(x)
+        addq %rdx, %rax ; u + v
+        addq $8, %rsp   ; deallocate last part of stack
+        popq %rbx       ; retore %rbx
+        popq %rbp       ; resore %rbp
+        ret     
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;前两条&lt;code&gt;push&lt;/code&gt;保存之前被调用者寄存器到栈中（此时P是被调用者），&lt;/p&gt;
 </description>
     </item>
     
