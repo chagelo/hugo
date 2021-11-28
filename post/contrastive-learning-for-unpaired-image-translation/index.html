@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	
-	<title>chagelo  | css</title>
+	<title>chagelo  | Contrastive Learning for Unpaired Image Translation</title>
 	<meta name="viewport" content="width=device-width,minimum-scale=1">
 	<meta name="generator" content="Hugo 0.89.3" />
 	
@@ -26,9 +26,6 @@
 
 	
 
-	
-	<link rel="alternate" href="/hugo/tags/css/index.xml" type="application/rss+xml" title="chagelo">
-	<link rel="feed" href="/hugo/tags/css/index.xml" type="application/rss+xml" title="chagelo">
 	
 	
 	
@@ -151,16 +148,69 @@ onload='renderMathInElement(document.body);'></script>
 		<header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl">
 			<div
 				class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2">
-					<div class="pb-4">
-		<h1 >
-			<a href="https://chagelo.github.io/hugo/" title="chagelo" class="heading font-cursive icon">chagelo</a>
-		</h1>
-	</div>
+				
+<div>
+	<h2>
+		<a href="https://chagelo.github.io/hugo/" title="chagelo" class="heading font-cursive icon">chagelo</a>
+	</h2>
+</div>
+<h1 class="pt-2">Contrastive Learning for Unpaired Image Translation</h1>
+
+<div class="flex flex-wrap justify-end pt-2 "><div class="md:flex-grow-0 font-light">
+	
+
+	
+
+	
+</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4"
+		datetime="2021-11-28T21:05:35&#43;08:00">2021-11-28</time>
+</div>
+
+<hr />
+
+
+			</div>
+		</header>
+		<main role="main" class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
+			
+
+<article>
+	<section class="mx-auto content">
+		<div class="c-rich-text"><h2 id="abstract">abstract</h2>
+<p><a href="https://arxiv.org/abs/1703.10593">cyclegan</a> 不可否认是一个很优秀的模型，然而它也有一个很大的缺陷，它要求 translation 必须可逆。<a href="https://arxiv.org/abs/2003.04858">aclgan</a> 中提出了一个种 loss 解决这个问题，这里。</p>
+<p>本片文章中提出使用对比学习解决这个问题。他们使用一种基于 patch 的方法，而并非考虑对整张图片进行操作。这个方法考虑输入图片 patch 和生成输出图片对应位置 patch，希望两个关联的 patch 能够映射到学习到的 feature space 中的同一个点（通过对比学习）。</p>
+<p>作者验证了该方法对于单向的 translation 是优秀的，提高了图片并且减少了训练时间。</p>
+<h2 id="introduction">introduction</h2>
+<p>对于 image translation，它从一个 domain 转换到另一个 domain，我们想要它的结构和内容不改变，这是一个 disentanglement problem，输出图片通过对抗 loss 来约束，同时使用 cycle-consistency 来保留内容，然而它有个前提就是两个 domain 之间的转换是双射，这由具体的任务所决定，这个条件非常具有限制性，或者说很严格。</p>
+<p>这篇文章的方法很直接，来保持每一对输入输出 patch 内容的关联性，让他们所拥有的公共信息更多（比如形状，动物的纹理，或者说动物的外观，目标物）。他们通过训练一个 encoder 来实现，encoder 关注两个 domain 的共同点。</p>
+<p><code>In this paper, we propose an alternative, rather straightforward way of maintaining correspondence in content but not appearance</code></p>
+<p>上面这句话是文中原话，值得思考的是什么叫做<code>not appearance</code>（每个 pixel 的 loss 相加，考虑整张图）。</p>
+<p>关于正负样本，从输入图片的其他位置取 patch 作为负样本，相比使用其他图片的 patch，能够使得结果 patch 更好的保留输入图片的内容。该方法不需要 memory bank 或者 特殊的结构（如 <a href="https://arxiv.org/abs/1905.09272">Data-efficient image recognition with CPC</a>、<a href="https://arxiv.org/abs/1906.00910">AMDIM</a></p>
+<p>经作者所言，他们的模型快且轻量级，超越了两个 one-sided translation 模型（参见原文参考文献），以及一些依赖于几个 auxiliary 网络结构和很多个 loss 而达到 sota 的模型。</p>
+<h2 id="related-work">related work</h2>
+<ol>
+<li>image translation and cycle-consistency；UNIT、MUNIT 二者学习一个比较清晰的中间 content latent space；一些工作也在关注于多 domain、多模态的合成，并且提高结果质量；cycle-consitency 被使用到很多场景，（a）两个 domain（b）图片到 latent（c）latent 到图片；基于 cycle-consistency 的重建比较困难，特别是当 input domain 相比 target domain 拥有更多信息的时候；</li>
+<li></li>
+</ol>
+</div>
+	</section>
+
+
+</article>
+
+		</main>
+		<div class="w-full h-0 flex-none order-3"></div>
+		<aside role="contentinfo"
+			class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
+			<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
+				
+	<div class="md:max-w-xs  flex flex-col md:items-end">
 	<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
 	
 	
 	<li class="px-1 md:px-0">
-		<a href="/hugo/post/" title="归档 page" >
+		<a href="/hugo/post/" title="归档 page" 
+			class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400" >
 			归档
 		</a>
 	</li>
@@ -172,8 +222,7 @@ onload='renderMathInElement(document.body);'></script>
 	</li>
 	
 	<li class="px-1 md:px-0">
-		<a href="/hugo/tags/" title="标签 page" 
-			class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400" >
+		<a href="/hugo/tags/" title="标签 page" >
 			标签
 		</a>
 	</li>
@@ -184,10 +233,6 @@ onload='renderMathInElement(document.body);'></script>
 		</a>
 	</li>
 	
-	
-	<li>
-		<a href='/hugo/tags/css/index.xml'>RSS</a>
-	</li>
 	
 	
 	
@@ -201,145 +246,6 @@ onload='renderMathInElement(document.body);'></script>
 	</div>
 	
 </ul>
-			</div>
-		</header>
-		<main role="main" class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4">
-			
-<h1 class="pb-4">
-	css
-</h1>
-<div>
-	<section>
-		
-		<div>
-			<div class="pb-8">
-	<div class="font-serif font-medium text-xl">
-		<a href="https://chagelo.github.io/hugo/post/markdown-syntax/">
-			Markdown Syntax Guide
-		</a>
-	</div>
-	
-	
-	
-	
-	<div class="font-serif text-gray-600 font-light pt-1">
-		Sample article showcasing basic Markdown syntax and formatting for HTML elements.</div>
-
-	
-	<div class="flex flex-wrap justify-between pt-1"><div class="md:flex-grow-0 font-light">
-	
-	
-	
-	
-	<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400"
-		href='/hugo/categories/themes'>themes</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400"
-		href='/hugo/categories/syntax'>syntax</a>
-	
-	
-	
-
-	
-	&nbsp;&nbsp;
-	
-
-	
-	
-	
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/hugo/tags/markdown'>markdown</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/hugo/tags/css'>css</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/hugo/tags/html'>html</a>&nbsp;&#47;
-	
-	<a class="post-taxonomy-tag text-eucalyptus-500"
-		href='/hugo/tags/themes'>themes</a>
-	
-	
-	
-</div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light"
-			datetime="2019-03-11T00:00:00Z">2019-3-11</time>
-	</div>
-</div>
-
-		</div>
-		
-	</section>
-</div>
-
-		</main>
-		<div class="w-full h-0 flex-none order-3"></div>
-		<aside role="contentinfo"
-			class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl">
-			<div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2">
-				
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="md:max-w-xs  flex flex-col md:items-end pt-2">
 	
 
 <div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start md:flex-col  max-h-16">
@@ -470,25 +376,59 @@ onload='renderMathInElement(document.body);'></script>
 	</a>
 	
 </div>
-	<div class="a-gray text-sm text-gray-500 leading-tight">
+	<div class="text-sm text-gray-500 leading-tight a-gray">
 		Copyright © 2008–2019
 		<br />
-		Built with Hugo and theme <a 
-			href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>.
-			<br />
-			30 pages, 6599 words in total.
+		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 842 words in this page.
 	</div>
 </div>
+
 			</div>
 		</aside>
 		<footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2">
 			
+<hr class="double-line" />
+<div class="flex flex-wrap justify-between pb-2 leading-loose font-serif">
+    
+    <a class="flex-grow-0" href="/hugo/post/gdb_debug/">
+        <svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+            height="24">
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" /></svg>
+        Gdb_debug
+    </a>
+    
+    
+</div>
+<div >
 
 
 
-
-
-
+</div>
+<hr />
+<div class="pb-2">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "YOURSHORTNAME" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+<hr />
 
 		</footer>
 		

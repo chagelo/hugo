@@ -7,10 +7,110 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2008–2019</copyright>
-    <lastBuildDate>Thu, 11 Nov 2021 22:23:34 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 28 Nov 2021 21:05:35 +0800</lastBuildDate>
     
 	<atom:link href="https://chagelo.github.io/hugo/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Contrastive Learning for Unpaired Image Translation</title>
+      <link>https://chagelo.github.io/hugo/post/contrastive-learning-for-unpaired-image-translation/</link>
+      <pubDate>Sun, 28 Nov 2021 21:05:35 +0800</pubDate>
+      
+      <guid>https://chagelo.github.io/hugo/post/contrastive-learning-for-unpaired-image-translation/</guid>
+      <description>&lt;h2 id=&#34;abstract&#34;&gt;abstract&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://arxiv.org/abs/1703.10593&#34;&gt;cyclegan&lt;/a&gt; 不可否认是一个很优秀的模型，然而它也有一个很大的缺陷，它要求 translation 必须可逆。&lt;a href=&#34;https://arxiv.org/abs/2003.04858&#34;&gt;aclgan&lt;/a&gt; 中提出了一个种 loss 解决这个问题，这里。&lt;/p&gt;
+&lt;p&gt;本片文章中提出使用对比学习解决这个问题。他们使用一种基于 patch 的方法，而并非考虑对整张图片进行操作。这个方法考虑输入图片 patch 和生成输出图片对应位置 patch，希望两个关联的 patch 能够映射到学习到的 feature space 中的同一个点（通过对比学习）。&lt;/p&gt;
+&lt;p&gt;作者验证了该方法对于单向的 translation 是优秀的，提高了图片并且减少了训练时间。&lt;/p&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;introduction&lt;/h2&gt;
+&lt;p&gt;对于 image translation，它从一个 domain 转换到另一个 domain，我们想要它的结构和内容不改变，这是一个 disentanglement problem，输出图片通过对抗 loss 来约束，同时使用 cycle-consistency 来保留内容，然而它有个前提就是两个 domain 之间的转换是双射，这由具体的任务所决定，这个条件非常具有限制性，或者说很严格。&lt;/p&gt;
+&lt;p&gt;这篇文章的方法很直接，来保持每一对输入输出 patch 内容的关联性，让他们所拥有的公共信息更多（比如形状，动物的纹理，或者说动物的外观，目标物）。他们通过训练一个 encoder 来实现，encoder 关注两个 domain 的共同点。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;In this paper, we propose an alternative, rather straightforward way of maintaining correspondence in content but not appearance&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;上面这句话是文中原话，值得思考的是什么叫做&lt;code&gt;not appearance&lt;/code&gt;（每个 pixel 的 loss 相加，考虑整张图）。&lt;/p&gt;
+&lt;p&gt;关于正负样本，从输入图片的其他位置取 patch 作为负样本，相比使用其他图片的 patch，能够使得结果 patch 更好的保留输入图片的内容。该方法不需要 memory bank 或者 特殊的结构（如 &lt;a href=&#34;https://arxiv.org/abs/1905.09272&#34;&gt;Data-efficient image recognition with CPC&lt;/a&gt;、&lt;a href=&#34;https://arxiv.org/abs/1906.00910&#34;&gt;AMDIM&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;经作者所言，他们的模型快且轻量级，超越了两个 one-sided translation 模型（参见原文参考文献），以及一些依赖于几个 auxiliary 网络结构和很多个 loss 而达到 sota 的模型。&lt;/p&gt;
+&lt;h2 id=&#34;related-work&#34;&gt;related work&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;image translation and cycle-consistency；UNIT、MUNIT 二者学习一个比较清晰的中间 content latent space；一些工作也在关注于多 domain、多模态的合成，并且提高结果质量；cycle-consitency 被使用到很多场景，（a）两个 domain（b）图片到 latent（c）latent 到图片；基于 cycle-consistency 的重建比较困难，特别是当 input domain 相比 target domain 拥有更多信息的时候；&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Gdb_debug</title>
+      <link>https://chagelo.github.io/hugo/post/gdb_debug/</link>
+      <pubDate>Wed, 17 Nov 2021 23:35:49 +0800</pubDate>
+      
+      <guid>https://chagelo.github.io/hugo/post/gdb_debug/</guid>
+      <description>&lt;p&gt;下面的命令都可以用首字母代替；&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;break n （简写b n）:在第n行处设置断点
+break func：在函数func()的入口处设置断点，如：break cb_button
+delete n：删除第n个断点
+info b （info breakpoints） ：显示当前程序的断点设置情况
+delete breakpoints：清除所有断点：
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;b *address&lt;/code&gt;在&lt;code&gt;address&lt;/code&gt;处添加断点&lt;/p&gt;
+&lt;h2 id=&#34;运行&#34;&gt;运行&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;run：简记为 r ，其作用是运行程序，当遇到断点后，程序会在断点处停止运行，等待用户输入下一步的命令。
+continue （简写c ）：继续执行，到下一个断点处（或运行结束）
+next：（简写 n），单步跟踪程序，当遇到函数调用时，也不进入此函数体；此命令同 step 的主要区别是，step 遇到用户自定义的函数，将步进到函数中去运行，而 next 则直接调用函数，不会进入到函数体内。
+step （简写s）：单步调试如果有函数调用，则进入函数；与命令n不同，n是不进入调用的函数的，需要有断点
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;查看代码和输出&#34;&gt;查看代码和输出&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;list ：简记为 l ，其作用就是列出程序的源代码，默认每次显示10行。
+list 行号：将显示当前文件以“行号”为中心的前后10行代码，如：list 12
+list 函数名：将显示“函数名”所在函数的源代码，如：list main
+print 表达式：简记为 p ，其中“表达式”可以是任何当前正在被测试程序的有效表达式，比如当前正在调试C语言的程序，那么“表达式”可以是任何C语言的有效表达式，包括数字，变量甚至是函数调用。
+print a：将显示整数 a 的值
+print/x &amp;lt;my_var&amp;gt; 用16进制表示var
+i r rax: 表示rax寄存器的值
+i r：表示所有寄存器的值
+layout src：显示源代码窗口
+layout asm：显示反汇编窗口
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;p 的使用比较复杂&lt;/p&gt;
+&lt;h2 id=&#34;关于-p&#34;&gt;关于 p&lt;/h2&gt;
+&lt;p&gt;p 有很多可选参数；&lt;code&gt;p/f&lt;/code&gt;表示指定格式输出，比如&lt;code&gt;x&lt;/code&gt;表示以十六进制输出，&lt;code&gt;o&lt;/code&gt;将整数以十进制输出的等等；&lt;a href=&#34;https://sourceware.org/gdb/current/onlinedocs/gdb/Output-Formats.html#Output-Formats&#34;&gt;Output-Formats&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;p/x *((int *)address)&lt;/code&gt;表示以十六进制输出整数，&lt;code&gt;address&lt;/code&gt;是其存放地址；&lt;code&gt;p/s (char *)address&lt;/code&gt;表示输出首地址在&lt;code&gt;address&lt;/code&gt;的字符串；如果是结构体，类似；&lt;code&gt;p/x *address&lt;/code&gt;，会以十六进制输出&lt;code&gt;address&lt;/code&gt;位置的 4 个字节（i386）;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;p/x *(int *)($esp+0x4)&lt;/code&gt;也是可行的；或者&lt;code&gt;x/w $esp+0x4&lt;/code&gt;；&lt;a href=&#34;https://stackoverflow.com/questions/5455832/how-to-print-0x4rbp-in-gdb&#34;&gt;How to print -0x4(%rbp) in gdb?&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;上面的&lt;code&gt;x/w&lt;/code&gt;中的&lt;code&gt;x&lt;/code&gt;表示检查内存的意思，&lt;code&gt;w&lt;/code&gt;和上面类似，&lt;a href=&#34;https://sourceware.org/gdb/current/onlinedocs/gdb/Memory.html#Memory&#34;&gt;Examining Memory&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;p *address@20&lt;/code&gt;访问数组的前20个元素，首地址是&lt;code&gt;address&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;reference&#34;&gt;reference&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://sourceware.org/gdb/current/onlinedocs/gdb/&#34;&gt;Debugging with GDB&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Microhabit</title>
+      <link>https://chagelo.github.io/hugo/post/microhabit/</link>
+      <pubDate>Sat, 13 Nov 2021 23:45:46 +0800</pubDate>
+      
+      <guid>https://chagelo.github.io/hugo/post/microhabit/</guid>
+      <description>&lt;h1 id=&#34;微习惯是什么&#34;&gt;微习惯是什么&lt;/h1&gt;
+&lt;p&gt;首先需要明确两个事实：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;如果不行动，决心再大也无用；&lt;/li&gt;
+&lt;li&gt;研究表明：人总会习惯性高估自己的自控力；&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;并且：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;哪怕是一点点行动，也比不作为好（至少数学上是，现实生活中也是；&lt;/li&gt;
+&lt;li&gt;相比一天做很多事，每天做一点的影响力更大。每天做一点就会形成习惯，久而久之，只要保持，习惯越不容易被打破；&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;《米哈尔科商业创意全攻略》（Thinkertoys, Michael Michalko）讲的是创造性思维以及如何解决问题。
+如果想解决一个问题，那么可以从它的对立面着手思考，看看会有什么创意迸发出来。如果想盖一座摩天大楼，就反过来想如果造一座深入地下的建筑会怎么样。这样可以强迫大脑拓宽思维，看到更多的可能性，从而激发更多创意。&lt;/p&gt;
+&lt;h2 id=&#34;只为好习惯&#34;&gt;只为好习惯&lt;/h2&gt;
+&lt;p&gt;通过养成更多的好习惯来边缘化一些坏习惯。&lt;/p&gt;
+&lt;h2 id=&#34;微习惯&#34;&gt;微习惯&lt;/h2&gt;
+&lt;p&gt;微习惯因为太小而不至于无法完成，因此就不会有消极情绪，愧疚、挫败感。&lt;/p&gt;
+&lt;h1 id=&#34;大脑的工作原理&#34;&gt;大脑的工作原理&lt;/h1&gt;
+&lt;p&gt;大脑是我的一切,华生。身体只是附件而已。——阿瑟·柯南·道尔,《福尔摩斯探案集》&lt;/p&gt;
+&lt;p&gt;首先需要明确“多重复几遍，就不会忘记”这样一个事实。&lt;/p&gt;
+&lt;p&gt;建立习惯意味着改变，而大脑会抗拒改变（一般改变需要付出代价），除非给大脑一些回报。从大脑角度看，建立和改变习惯的两个关键是重复和回报。&lt;/p&gt;
+&lt;p&gt;另外，当建立习惯后，大脑能迅速作出反应，比起有意识权衡、选择、行动，更加有效率。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Program in Machine Level</title>
@@ -132,8 +232,37 @@ of: 是否溢出，正溢出或负溢出&lt;/p&gt;
         popq %rbx       ; retore %rbx
         popq %rbp       ; resore %rbp
         ret     
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;前两条&lt;code&gt;push&lt;/code&gt;保存之前被调用者寄存器到栈中（此时P是被调用者），&lt;/p&gt;
-</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;前两条&lt;code&gt;push&lt;/code&gt;保存之前被调用者寄存器到栈中（此时P是被调用者）；&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;gcc 优化访问数组&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;$$D[i][j] = x_D + L(C\cdot i + j$$&lt;/p&gt;
+&lt;p&gt;在访问元素的时候，访问地址，然后访问某个元素，假如编译器不作优化，那么访问一个数组的一行元素，没访问一次就需要拿行元素个数乘以元素大小，不考虑实际运算，也会耗费很多乘法操作，乘法貌似很昂贵？因此编译器优化会尽可能不使用额外的乘法运算。&lt;/p&gt;
+&lt;h2 id=&#34;与-i38632bit-区别&#34;&gt;与 i386（32bit） 区别&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;i386 只有前 8 个寄存器，且只有 32 位；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;参数传递：x86-64 基本使用寄存器传递参数，寄存器不够使用栈，i386 将参数放入栈中，第一个参数放在栈顶&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在被调用函数内部，函数返回值前，&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;将返回值存到&lt;code&gt;%eax&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;将栈顶置为未调用之前的状态（也就是恢复调用者的栈顶），&lt;code&gt;movl %ebp, %esp&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;恢复调用者的栈底，&lt;code&gt;popl %ebp&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ret&lt;/code&gt;返回&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在函数内部，刚刚调用时&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;函数返回地址入栈&lt;/li&gt;
+&lt;li&gt;将&lt;code&gt;%ebp&lt;/code&gt;入栈，也就是在调用函数的栈帧的底部地址入栈&lt;/li&gt;
+&lt;li&gt;可能会有将其他寄存器内容入栈，进行保护；&lt;/li&gt;
+&lt;li&gt;通过&lt;code&gt;%esp&lt;/code&gt;分配局部变量；&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;i386 中 2、3 两部通过&lt;code&gt;leave&lt;/code&gt;实现；&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/i386_fcall_stack.png&#34;&gt;
+&lt;/center&gt;</description>
     </item>
     
     <item>

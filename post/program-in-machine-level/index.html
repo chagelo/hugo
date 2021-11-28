@@ -7,7 +7,7 @@
 	
 	<title>chagelo  | Program in Machine Level</title>
 	<meta name="viewport" content="width=device-width,minimum-scale=1">
-	<meta name="generator" content="Hugo 0.88.1" />
+	<meta name="generator" content="Hugo 0.89.3" />
 	
 	
 	<META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
@@ -290,8 +290,37 @@ of: 是否溢出，正溢出或负溢出</p>
         popq %rbx       ; retore %rbx
         popq %rbp       ; resore %rbp
         ret     
-</code></pre><p>前两条<code>push</code>保存之前被调用者寄存器到栈中（此时P是被调用者），</p>
-</div>
+</code></pre><p>前两条<code>push</code>保存之前被调用者寄存器到栈中（此时P是被调用者）；</p>
+<p><strong>gcc 优化访问数组</strong></p>
+<p>$$D[i][j] = x_D + L(C\cdot i + j$$</p>
+<p>在访问元素的时候，访问地址，然后访问某个元素，假如编译器不作优化，那么访问一个数组的一行元素，没访问一次就需要拿行元素个数乘以元素大小，不考虑实际运算，也会耗费很多乘法操作，乘法貌似很昂贵？因此编译器优化会尽可能不使用额外的乘法运算。</p>
+<h2 id="与-i38632bit-区别">与 i386（32bit） 区别</h2>
+<ol>
+<li>
+<p>i386 只有前 8 个寄存器，且只有 32 位；</p>
+</li>
+<li>
+<p>参数传递：x86-64 基本使用寄存器传递参数，寄存器不够使用栈，i386 将参数放入栈中，第一个参数放在栈顶</p>
+</li>
+</ol>
+<p>在被调用函数内部，函数返回值前，</p>
+<ol>
+<li>将返回值存到<code>%eax</code></li>
+<li>将栈顶置为未调用之前的状态（也就是恢复调用者的栈顶），<code>movl %ebp, %esp</code></li>
+<li>恢复调用者的栈底，<code>popl %ebp</code></li>
+<li><code>ret</code>返回</li>
+</ol>
+<p>在函数内部，刚刚调用时</p>
+<ol>
+<li>函数返回地址入栈</li>
+<li>将<code>%ebp</code>入栈，也就是在调用函数的栈帧的底部地址入栈</li>
+<li>可能会有将其他寄存器内容入栈，进行保护；</li>
+<li>通过<code>%esp</code>分配局部变量；</li>
+</ol>
+<p>i386 中 2、3 两部通过<code>leave</code>实现；</p>
+<center>
+<img src="/hugo/image/i386_fcall_stack.png">
+</center></div>
 	</section>
 
 
@@ -478,7 +507,7 @@ of: 是否溢出，正溢出或负溢出</p>
 	<div class="text-sm text-gray-500 leading-tight a-gray">
 		Copyright © 2008–2019
 		<br />
-		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 1757 words in this page.
+		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 2145 words in this page.
 	</div>
 </div>
 
@@ -497,6 +526,13 @@ of: 是否溢出，正溢出或负溢出</p>
         Hugo Install
     </a>
     
+    
+    <a class="flex-grow-0" href="/hugo/post/microhabit/">
+        Microhabit
+        <svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+            height="24">
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" /></svg></a>
     
 </div>
 <div >
