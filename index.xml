@@ -32,8 +32,66 @@
 &lt;h2 id=&#34;related-work&#34;&gt;related work&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;image translation and cycle-consistency；UNIT、MUNIT 二者学习一个比较清晰的中间 content latent space；一些工作也在关注于多 domain、多模态的合成，并且提高结果质量；cycle-consitency 被使用到很多场景，（a）两个 domain（b）图片到 latent（c）latent 到图片；基于 cycle-consistency 的重建比较困难，特别是当 input domain 相比 target domain 拥有更多信息的时候；&lt;/li&gt;
-&lt;li&gt;&lt;/li&gt;
+&lt;li&gt;relation preservation；有一些工作如 DistanceGAN、GcGAN 等绕过 cycle-consistency 实现单向的翻译。cycle-consistency 的目的就是不希望 input domain 到 target domain 的改变太多，也就是说它也希望尽可能保留 input domain 的内容；这里方法，在 input 和 output 之间学习一个跨 domain 相似性函数；&lt;/li&gt;
+&lt;li&gt;Emergent perceptual similarity in deep network embeddings；衡量高维度的数据、信号之间的感知距离在图像处理计算机视觉中是一个一直一来的问题，image translation 一般使用 l1 来衡量每个像素，这会导致模糊，且不能反映人的感知。perceptual loss、feature loss、contextual loss。&lt;/li&gt;
+&lt;li&gt;Contrastive representation learning.&lt;/li&gt;
 &lt;/ol&gt;
+&lt;h2 id=&#34;method&#34;&gt;method&lt;/h2&gt;
+&lt;p&gt;本文方法避免训练一个多余的 generator 和 discriminator。&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/static/image/cut_loss2.png&#34;&gt;
+&lt;/center&gt;
+这个 loss 是 InforNCE Loss；
+&lt;p&gt;$G_{enc}$是 generator 的 encoder，它的输出就是输入图片的 feature 的 embedding，它将其中的 encoder 中的$L$层的 feature map 拿出来，将其输入到 mlp 中。&lt;/p&gt;
+&lt;p&gt;除了整张图像具有内容上的共同特征，输出和输出每个对应 patch 也具有这样的对应关系。例如：给定一张斑马的腿部的图像 patch，则其转换前的马的图像也应当是包含对应的腿部的 patch，甚至在像素级别，斑马的颜色像素也应当是对应到马的颜色像素，而不是对应到背景草地的颜色像素，因此本文应用多层的基于 Patch 的 learning objective。&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/static/image/cut_loss1.png&#34;&gt;
+&lt;/center&gt;
+&lt;p&gt;它们将 encoder 的中间结果 feature map 拿出来送入到 mlp 中（利用 mlp 进行sample 一些 patches），不同 feature map 对应不同 level 的信息，不同 patch 对应不同位置。它们用这些 patches 计算 loss。（对于生成的图片 patch 包含腿部，那么对应于输入肯定希望是也是腿部，不过是马纹理不同，比如输出 patch 包含马的身体，那么希望输入 patch 不包含比如填空）不同尺度，不同位置要对应的上，因此采用 mutilayer。&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/static/image/cut_patchnce.png&#34;&gt;
+&lt;/center&gt;
+&lt;p&gt;单张图片的内部的数据在分割、超分、降噪上都被证明是有效的。实验中也发现使用同一张图片的数据作为负样本，要好过使用数据集中其他图片采样作为负样本。&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/static/image/cut_external.png&#34;&gt;
+&lt;/center&gt;
+&lt;p&gt;此外也考虑把数据集其他图片采样作为负样本计算 nce loss。作者还将 domainY 的图片输入 网络计算 PatchNCE Loss，这和 identity loss 很类似；&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/static/image/cut_loss.png&#34;&gt;
+&lt;/center&gt;
+&lt;p&gt;令$\lambda_{X}=1,\lambda_{Y}=1$，这种配置下的网络结构叫做 CUT，而$\lambda_{X}=10,\lambda_{Y}=0$叫做 FastCUT，前者的效果非常好，后者可以看作是一种快速且轻量级的 CycleGAN。&lt;/p&gt;
+&lt;p&gt;作者也有一些失败的结果，比如对于一匹后腿直立的马，由于模型识别不出这种不熟悉的姿态，导致给背景也添加上了斑马纹理。另外对于猫到狗的例子，其中有个例子凭空多了舌头。&lt;/p&gt;
+&lt;h2 id=&#34;experiments&#34;&gt;Experiments&lt;/h2&gt;
+&lt;p&gt;Training details，主要和 CycleGAN做对比，所以实验设置和 CycleGAN 很类似。&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/static/image/cut_exp_baseline.png&#34;&gt;
+&lt;/center&gt;
+&lt;p&gt;上面的实验是 Cityscapes 数据集上的分割结果。可以看出结果比一些 baseline 要好。且速度和内存消耗比 CycleGAN 都要优秀&lt;/p&gt;
+&lt;h3 id=&#34;ablation-study-and-analysis&#34;&gt;Ablation study and analysis&lt;/h3&gt;
+&lt;p&gt;文中方法有很多细节，文中方法使用了 resnet-based generator（used in CycleGAN），patchnce 从输入图片采样负样本，以及从 generator 得到 encoder 提取 feature map，以及 identity loss.&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/static/image/cut_ablation1.png&#34;&gt;
+&lt;/center&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/static/image/cut_ablation2.png&#34;&gt;
+&lt;/center&gt;
+&lt;p&gt;在没有 identity loss，或仅使用 encoder 最后一层的 feature 作为 mlp 输入，或者只使用其他样本采样的负例，效果都不太行。&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/static/image/cut_ablation3.png&#34;&gt;
+&lt;/center&gt;
+&lt;p&gt;identity loss 相当于一个正则项，它一定程度保证稳定性，右边那个比较明显，导致了 collapse。&lt;/p&gt;
+&lt;p&gt;作者还使用 momentum encoder 来从其他图片采样负样本，使用 external and internal 负样本，效果比只使用 internal 负样本效果差。
+从上面的 Cityscape 的结果可以看到一些质量的相比的下降，会有一些重复的纹理，所以从与输出图片对应的输入图片采样负样本可能是有助于保留输入图片的 content。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Internal negatives are more effective than external.&lt;/li&gt;
+&lt;li&gt;Importance of using multiple layers of encoder&lt;/li&gt;
+&lt;li&gt;identity loss regularizer stabilizes training.&lt;/li&gt;
+&lt;li&gt;Visualizing learned similarity by encoder G_enc&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;conclusion&lt;/h2&gt;
+&lt;p&gt;这篇文章提出一种方法用于解决 CycleGAN-consistency 的问题（translation 必须是双射）。所以对于 big object removal 或者 shape change 等，CycleGAN 做的不太行，本文方法一方面能够解决 CycleGAN 的问题，另一方面又能在总体上达到且超越 CycleGAN 的总体效果。&lt;/p&gt;
+&lt;p&gt;通过使用对比学习，非常直接的考虑 input 和 output 在这个 translation 过程中必须保留内容（类似 SimCLR），而任务的令一方面 transaltion 则由 GAN 实现。相比而言它能够达到 CycleGAN 的效果，并且少训练一个 generator 和 discriminator，更加轻量级，这是它的优点。&lt;/p&gt;
+&lt;p&gt;试验中也有一些失败的 case 比如对于后腿直立的马并不能很好的转换为斑马，一个原因是网络没有见过很多不同姿态的马，另一个就是 cat2dog 凭空多出了舌头（虽然人的直觉上是很好的，但这里的 translation 并不是好的）。&lt;/p&gt;
 </description>
     </item>
     
