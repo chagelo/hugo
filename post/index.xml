@@ -91,7 +91,19 @@
 &lt;h2 id=&#34;conclusion&#34;&gt;conclusion&lt;/h2&gt;
 &lt;p&gt;这篇文章提出一种方法用于解决 CycleGAN-consistency 的问题（translation 必须是双射）。所以对于 big object removal 或者 shape change 等，CycleGAN 做的不太行，本文方法一方面能够解决 CycleGAN 的问题，另一方面又能在总体上达到且超越 CycleGAN 的总体效果。&lt;/p&gt;
 &lt;p&gt;通过使用对比学习，非常直接的考虑 input 和 output 在这个 translation 过程中必须保留内容（类似 SimCLR），而任务的令一方面 transaltion 则由 GAN 实现。相比而言它能够达到 CycleGAN 的效果，并且少训练一个 generator 和 discriminator，更加轻量级，这是它的优点。&lt;/p&gt;
-&lt;p&gt;试验中也有一些失败的 case 比如对于后腿直立的马并不能很好的转换为斑马，一个原因是网络没有见过很多不同姿态的马，另一个就是 cat2dog 凭空多出了舌头（虽然人的直觉上是很好的，但这里的 translation 并不是好的）。&lt;/p&gt;
+&lt;p&gt;试验中也有一些失败的 case 比如对于后腿直立的马并不能很好的转换为斑马，一个原因是网络没有见过很多不同姿态的马，另一个就是 cat2dog 凭空多出了舌头（虽然人的直觉上是很好的，但这里的 translation 并不是好的），一个直觉就是 generator 和 contrastive learning 并没有 connect 的很好（比如它们 loss 的权重是不是能够调一下）。&lt;/p&gt;
+&lt;h2 id=&#34;reference&#34;&gt;reference&lt;/h2&gt;
+&lt;p&gt;待阅读参考文献&lt;/p&gt;
+&lt;p&gt;1.One-sided unsupervised domain mapping.
+2.Geometry-
+consistent generative adversarial networks for one-sided unsupervised domain map-
+ping
+3.自监督系列：AMDIM、Moco、SimCLR、BYOL
+4.UNIT 有待再完整的读一下（MUNIT）（VAE）
+5.Augmented
+cyclegan: Learning many-to-many mappings from unpaired data
+6.Harmonic unpaired image-to-image translation
+7.TraVeLGAN、DistanceGAN、GcGAN（one-way translation）&lt;/p&gt;
 </description>
     </item>
     
