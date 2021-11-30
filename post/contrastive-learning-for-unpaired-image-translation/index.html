@@ -197,45 +197,45 @@ onload='renderMathInElement(document.body);'></script>
 <h2 id="method">method</h2>
 <p>本文方法避免训练一个多余的 generator 和 discriminator。</p>
 <center>
-<img src="/hugo/static/image/cut_loss2.png">
+<img src="/hugo/image/cut_loss2.png">
 </center>
 这个 loss 是 InforNCE Loss；
 <p>$G_{enc}$是 generator 的 encoder，它的输出就是输入图片的 feature 的 embedding，它将其中的 encoder 中的$L$层的 feature map 拿出来，将其输入到 mlp 中。</p>
 <p>除了整张图像具有内容上的共同特征，输出和输出每个对应 patch 也具有这样的对应关系。例如：给定一张斑马的腿部的图像 patch，则其转换前的马的图像也应当是包含对应的腿部的 patch，甚至在像素级别，斑马的颜色像素也应当是对应到马的颜色像素，而不是对应到背景草地的颜色像素，因此本文应用多层的基于 Patch 的 learning objective。</p>
 <center>
-<img src="/hugo/static/image/cut_loss1.png">
+<img src="/hugo/image/cut_loss1.png">
 </center>
 <p>它们将 encoder 的中间结果 feature map 拿出来送入到 mlp 中（利用 mlp 进行sample 一些 patches），不同 feature map 对应不同 level 的信息，不同 patch 对应不同位置。它们用这些 patches 计算 loss。（对于生成的图片 patch 包含腿部，那么对应于输入肯定希望是也是腿部，不过是马纹理不同，比如输出 patch 包含马的身体，那么希望输入 patch 不包含比如填空）不同尺度，不同位置要对应的上，因此采用 mutilayer。</p>
 <center>
-<img src="/hugo/static/image/cut_patchnce.png">
+<img src="/hugo/image/cut_patchnce.png">
 </center>
 <p>单张图片的内部的数据在分割、超分、降噪上都被证明是有效的。实验中也发现使用同一张图片的数据作为负样本，要好过使用数据集中其他图片采样作为负样本。</p>
 <center>
-<img src="/hugo/static/image/cut_external.png">
+<img src="/hugo/image/cut_external.png">
 </center>
 <p>此外也考虑把数据集其他图片采样作为负样本计算 nce loss。作者还将 domainY 的图片输入 网络计算 PatchNCE Loss，这和 identity loss 很类似；</p>
 <center>
-<img src="/hugo/static/image/cut_loss.png">
+<img src="/hugo/image/cut_loss.png">
 </center>
 <p>令$\lambda_{X}=1,\lambda_{Y}=1$，这种配置下的网络结构叫做 CUT，而$\lambda_{X}=10,\lambda_{Y}=0$叫做 FastCUT，前者的效果非常好，后者可以看作是一种快速且轻量级的 CycleGAN。</p>
 <p>作者也有一些失败的结果，比如对于一匹后腿直立的马，由于模型识别不出这种不熟悉的姿态，导致给背景也添加上了斑马纹理。另外对于猫到狗的例子，其中有个例子凭空多了舌头。</p>
 <h2 id="experiments">Experiments</h2>
 <p>Training details，主要和 CycleGAN做对比，所以实验设置和 CycleGAN 很类似。</p>
 <center>
-<img src="/hugo/static/image/cut_exp_baseline.png">
+<img src="/hugo/image/cut_exp_baseline.png">
 </center>
 <p>上面的实验是 Cityscapes 数据集上的分割结果。可以看出结果比一些 baseline 要好。且速度和内存消耗比 CycleGAN 都要优秀</p>
 <h3 id="ablation-study-and-analysis">Ablation study and analysis</h3>
 <p>文中方法有很多细节，文中方法使用了 resnet-based generator（used in CycleGAN），patchnce 从输入图片采样负样本，以及从 generator 得到 encoder 提取 feature map，以及 identity loss.</p>
 <center>
-<img src="/hugo/static/image/cut_ablation1.png">
+<img src="/hugo/image/cut_ablation1.png">
 </center>
 <center>
-<img src="/hugo/static/image/cut_ablation2.png">
+<img src="/hugo/image/cut_ablation2.png">
 </center>
 <p>在没有 identity loss，或仅使用 encoder 最后一层的 feature 作为 mlp 输入，或者只使用其他样本采样的负例，效果都不太行。</p>
 <center>
-<img src="/hugo/static/image/cut_ablation3.png">
+<img src="/hugo/image/cut_ablation3.png">
 </center>
 <p>identity loss 相当于一个正则项，它一定程度保证稳定性，右边那个比较明显，导致了 collapse。</p>
 <p>作者还使用 momentum encoder 来从其他图片采样负样本，使用 external and internal 负样本，效果比只使用 internal 负样本效果差。
