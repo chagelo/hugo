@@ -246,6 +246,13 @@ onload='renderMathInElement(document.body);'></script>
 <li>identity loss regularizer stabilizes training.</li>
 <li>Visualizing learned similarity by encoder G_enc</li>
 </ul>
+<h2 id="code">code</h2>
+<center>
+<img src="/hugo/image/cut_code.png">
+</center>
+<center>
+<img src="/hugo/image/cut_patchnce_cal.png">
+</center>
 <h2 id="conclusion">conclusion</h2>
 <p>这篇文章提出一种方法用于解决 CycleGAN-consistency 的问题（translation 必须是双射）。所以对于 big object removal 或者 shape change 等，CycleGAN 做的不太行，本文方法一方面能够解决 CycleGAN 的问题，另一方面又能在总体上达到且超越 CycleGAN 的总体效果。</p>
 <p>通过使用对比学习，非常直接的考虑 input 和 output 在这个 translation 过程中必须保留内容（类似 SimCLR），而任务的令一方面 transaltion 则由 GAN 实现。相比而言它能够达到 CycleGAN 的效果，并且少训练一个 generator 和 discriminator，更加轻量级，这是它的优点。</p>
@@ -449,7 +456,7 @@ cyclegan: Learning many-to-many mappings from unpaired data
 	<div class="text-sm text-gray-500 leading-tight a-gray">
 		Copyright © 2008–2019
 		<br />
-		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 2749 words in this page.
+		Built with Hugo and theme <a href="https://github.com/heyeshuang/hugo-theme-tokiwa">Tokiwa</a>. 2750 words in this page.
 	</div>
 </div>
 

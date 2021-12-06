@@ -88,6 +88,13 @@
 &lt;li&gt;identity loss regularizer stabilizes training.&lt;/li&gt;
 &lt;li&gt;Visualizing learned similarity by encoder G_enc&lt;/li&gt;
 &lt;/ul&gt;
+&lt;h2 id=&#34;code&#34;&gt;code&lt;/h2&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/cut_code.png&#34;&gt;
+&lt;/center&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/cut_patchnce_cal.png&#34;&gt;
+&lt;/center&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;conclusion&lt;/h2&gt;
 &lt;p&gt;这篇文章提出一种方法用于解决 CycleGAN-consistency 的问题（translation 必须是双射）。所以对于 big object removal 或者 shape change 等，CycleGAN 做的不太行，本文方法一方面能够解决 CycleGAN 的问题，另一方面又能在总体上达到且超越 CycleGAN 的总体效果。&lt;/p&gt;
 &lt;p&gt;通过使用对比学习，非常直接的考虑 input 和 output 在这个 translation 过程中必须保留内容（类似 SimCLR），而任务的令一方面 transaltion 则由 GAN 实现。相比而言它能够达到 CycleGAN 的效果，并且少训练一个 generator 和 discriminator，更加轻量级，这是它的优点。&lt;/p&gt;
