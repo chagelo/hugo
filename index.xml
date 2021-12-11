@@ -7,10 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2008–2019</copyright>
-    <lastBuildDate>Sun, 28 Nov 2021 21:05:35 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 11 Dec 2021 22:38:53 +0800</lastBuildDate>
     
 	<atom:link href="https://chagelo.github.io/hugo/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Summary of DL Based MRI Artifacts Reduction Methods</title>
+      <link>https://chagelo.github.io/hugo/post/summary-of-dl-based-mri-artifacts-reduction-methods/</link>
+      <pubDate>Sat, 11 Dec 2021 22:38:53 +0800</pubDate>
+      
+      <guid>https://chagelo.github.io/hugo/post/summary-of-dl-based-mri-artifacts-reduction-methods/</guid>
+      <description>&lt;h2 id=&#34;dagan&#34;&gt;DAGAN&lt;/h2&gt;
+&lt;p&gt;paper: Deep De-Aliasing for Fast Compressive Sensing MRI&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/dagan.png&#34;&gt;
+&lt;/center&gt;
+&lt;p&gt;如上图，$x_u$文中说是 zero-filling undersampling k-space measurement 的重建，应该是加了噪声。文中实验给出了加上一维高斯噪声和二维高斯噪声的结果。$x_t$是完整测量重建的结果。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Contrastive Learning for Unpaired Image Translation</title>
