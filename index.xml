@@ -23,7 +23,23 @@
 &lt;center&gt;
 &lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/dagan.png&#34;&gt;
 &lt;/center&gt;
-&lt;p&gt;如上图，$x_u$文中说是 zero-filling undersampling k-space measurement 的重建，应该是加了噪声。文中实验给出了加上一维高斯噪声和二维高斯噪声的结果。$x_t$是完整测量重建的结果。&lt;/p&gt;
+&lt;p&gt;如上图，$x_u$文中说是 zero-filling undersampling k-space measurement 的重建，应该是加了噪声。文中实验给出了加上一维高斯噪声和二维高斯噪声的结果。$x_t$是完整测量重建的结果。这是对 mri 单通道重建的一个算法。&lt;/p&gt;
+&lt;h2 id=&#34;cycle-medgan&#34;&gt;Cycle-MedGAN&lt;/h2&gt;
+&lt;p&gt;paper: Unsupervised Medical Image Translation Using
+Cycle-MedGAN&lt;/p&gt;
+&lt;p&gt;关键部分在于对 CycleGAN 的 loss 的改动；&lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&#34;https://chagelo.github.io/hugo/hugo/image/medgan_added_loss.png&#34;&gt;
+&lt;/center&gt;
+&lt;p&gt;$$
+\mathcal{L}&lt;em&gt;{cPercep} = \sum&lt;/em&gt;{i=0}^{L}\lambda_{cp,i}(||F(x)-F_i(\hat{\hat{x}})||_1+||F(y)-F_i(\hat{\hat{y}})||_1)
+$$&lt;/p&gt;
+&lt;p&gt;$$
+Gr_i(x)&lt;em&gt;{m,n}=\frac{1}{h_iw_id_i}\sum&lt;/em&gt;{h=1}^{h_i}\sum_{w=1}^{w_i}F_i(x)&lt;em&gt;{h,w,n}F_i(x)&lt;/em&gt;{h,w,m}
+$$&lt;/p&gt;
+&lt;p&gt;$$
+\mathcal{L}&lt;em&gt;{cStyle}=\sum&lt;/em&gt;{i=1}^{L}\lambda_{cs,i}\frac{1}{4d_i^2}(||Gr_i(x)-Gr_i(\hat{\hat{x}})||_F^2+||Gr_i(y)-Gr_i(\hat{\hat{y}})||_F^2)
+$$&lt;/p&gt;
 </description>
     </item>
     
