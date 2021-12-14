@@ -189,14 +189,12 @@ Cycle-MedGAN</p>
 <center>
 <img src="/hugo/image/medgan_added_loss.png">
 </center>
+<p>$$\mathcal L_{cPercep} = \sum_{i=0}^{L}\lambda_{cp,i}(||F(x)-F_i(\hat{\hat{x}})||_1+||F(y)-F_i(\hat{\hat{y}})||_1)$$</p>
 <p>$$
-\mathcal{L}<em>{cPercep} = \sum</em>{i=0}^{L}\lambda_{cp,i}(||F(x)-F_i(\hat{\hat{x}})||_1+||F(y)-F_i(\hat{\hat{y}})||_1)
+Gr_i^{m,n}(x)=\frac{1}{h_iw_id_i}\sum_{h=1}^{h_i}\sum_{w=1}^{w_i}F_i^{h,w,n}(x)F_i^{h,w,m}(x)
 $$</p>
 <p>$$
-Gr_i(x)<em>{m,n}=\frac{1}{h_iw_id_i}\sum</em>{h=1}^{h_i}\sum_{w=1}^{w_i}F_i(x)<em>{h,w,n}F_i(x)</em>{h,w,m}
-$$</p>
-<p>$$
-\mathcal{L}<em>{cStyle}=\sum</em>{i=1}^{L}\lambda_{cs,i}\frac{1}{4d_i^2}(||Gr_i(x)-Gr_i(\hat{\hat{x}})||_F^2+||Gr_i(y)-Gr_i(\hat{\hat{y}})||_F^2)
+\mathcal L_{cStyle}=\sum_{i=1}^{L}\lambda_{cs,i}\frac{1}{4d_i^2}(||Gr_i(x)-Gr_i(\hat{\hat{x}})||_F^2+||Gr_i(y)-Gr_i(\hat{\hat{y}})||_F^2)
 $$</p>
 </div>
 	</section>
